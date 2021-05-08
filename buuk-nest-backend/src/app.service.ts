@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QUESTIONS } from './data';
-import { Question, Test } from './models';
+import { Question, Test, SubmittedTestDTO } from './models';
 @Injectable()
 export class AppService {
   private Questions: Question[] = QUESTIONS;
@@ -132,4 +132,36 @@ export class AppService {
     this.Tests.push(test);
     return [{ ...test }];
   }
+
+  submitTest(submittedTestDTO: SubmittedTestDTO): Test[] {
+    let testId = submittedTestDTO.id;
+    let foundTest = this.Tests.findIndex((t, i) => t.id === testId);
+    if (foundTest === -1) {
+      throw new Error('Test Not Found');
+    } else {
+      let result: any = 0;
+      let currentTest: Test = this.Tests[foundTest];
+      const { questions } = currentTest;
+      const { answers } = submittedTestDTO;
+      questions.forEach((q, i) => {
+        let aIndex = answers.findIndex((a, i) => a.questionId === q.id);
+        if (aIndex > -1) {
+          let answer = answers[aIndex];
+          if (answer.chosenOption.label === q.answer.label) {
+            result = result + 1;
+          }
+        }
+      });
+      result = (result / 4) * 100;
+      this.Tests[foundTest].result = result;
+      this.Tests[foundTest].duration = submittedTestDTO.duration;
+      this.Tests[foundTest].startTime = submittedTestDTO.startTime;
+    }
+    return [
+      {
+        ...this.Tests[foundTest],
+      },
+    ];
+  }
+
 }

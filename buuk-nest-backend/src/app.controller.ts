@@ -1,6 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Response, Test } from './models';
+import { Response, Test, SubmittedTestDTO } from './models';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -24,6 +24,26 @@ export class AppController {
       let response: Response<Test> = {
         status: 400,
         message: `Error: ${e}`,
+        data: [],
+      };
+      return response;
+    }
+  }
+
+  @Post('submit-test')
+  submitTest(@Body() submittedTestDTO: SubmittedTestDTO): Response<Test>{
+    try {
+      let test: Test[] = this.appService.submitTest(submittedTestDTO);
+      let response: Response<Test> = {
+        status: 200,
+        message: 'Success',
+        data: test,
+      };
+      return response;
+    } catch (e) {
+      let response: Response<Test> = {
+        status: 400,
+        message: `${e}`,
         data: [],
       };
       return response;
