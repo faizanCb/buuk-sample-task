@@ -19,7 +19,7 @@ import { QuizService } from './services/quiz.service';
 export class AppComponent implements OnInit {
   title = 'buuk-frontend';
   currentPage: number = 1;
-  currentSize: number = 10;
+  currentSize: number = 3;
   totalTests: number = 100;
   currentTest: Test = {
     id: 5674,
@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
           numberOfTests: overallStatsResponseObject.numberOfTests || 0,
           average: overallStatsResponseObject.average || 0,
         };
-        this.getLatestTests()
+        this.getLatestTests(this.currentPage, this.currentSize)
       });
   }
 
