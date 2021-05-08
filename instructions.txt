@@ -1,0 +1,14 @@
+
+Live URLS:
+   backend : https://buuk-backend.herokuapp.com/
+   frontend: http://blue-eyed-wheel.surge.sh/
+
+
+For Running Applications Locally:
+  angular-app: 
+	1.cd buuk-angular-frontend
+        2. ng serve
+
+  nestjs-app:
+	1. cd buuk-nest-backend
+        2. npm run start:dev 
