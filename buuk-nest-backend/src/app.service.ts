@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QUESTIONS } from './data';
-import { Question, Test, SubmittedTestDTO } from './models';
+import { Question, Test, SubmittedTestDTO, OverallStatistics } from './models';
 @Injectable()
 export class AppService {
   private Questions: Question[] = QUESTIONS;
@@ -162,6 +162,48 @@ export class AppService {
         ...this.Tests[foundTest],
       },
     ];
+  }
+
+  getTests(page: number = 1, limit: number = 10): Test[] {
+    page = page - 1;
+    let start: number = page * limit;
+    let end: number = limit * (page + 1);
+    this.Tests.sort((a, b) => (a.startTime < b.startTime ? 1 : -1));
+    this.Tests = this.Tests.filter(
+      (t, i) => t.duration !== undefined || t.startTime !== undefined,
+    );
+    return this.Tests.slice(start, end);
+  }
+
+  getTestsCount() {
+    return this.Tests.length;
+  }
+
+  getOverallStatistics(): OverallStatistics[] {
+    let result: OverallStatistics[] = [];
+    let stats = {
+      duration: 0,
+      average: 0,
+      numberOfTests: 0,
+    };
+    let numberOfTests = this.Tests.length;
+    let durations = 0;
+    let results = 0;
+    this.Tests.forEach((t, i) => {
+      if (t.duration) {
+        durations = durations + <any>t.duration;
+      }
+      if (t.result) {
+        results = results + <any>t.result;
+      }
+    });
+    stats.duration = durations / numberOfTests || 0;
+    stats.average = results / numberOfTests || 0;
+    stats.duration = Math.round(stats.duration * 10) / 10;
+    stats.average = Math.round(stats.average * 10) / 10;
+    stats.numberOfTests = numberOfTests || 0;
+    result.push(stats);
+    return result;
   }
 
 }
