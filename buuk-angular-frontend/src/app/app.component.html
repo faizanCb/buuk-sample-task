@@ -22,3 +22,97 @@
     </div>
   </div>
 </div>
+<div nz-row style="margin: 50px 0">
+  <div nz-col nzSpan="1" nzOffset="11">
+    <button nzSize="large" nz-button nzType="primary" (click)="showModal()">
+      New Test
+    </button>
+  </div>
+</div>
+
+<div nz-row>
+  <div nz-col nzSpan="24">
+    <nz-modal
+      [(nzVisible)]="isVisible"
+      nzTitle="New Test"
+      (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()"
+      [nzOkLoading]="isOkLoading"
+    >
+      <div *nzModalContent>
+        <nz-steps [nzCurrent]="current">
+          <nz-step nzTitle="Question # 1"></nz-step>
+          <nz-step nzTitle="Question # 2"></nz-step>
+          <nz-step nzTitle="Question # 3"></nz-step>
+          <nz-step nzTitle="Question # 4"></nz-step>
+        </nz-steps>
+
+        <div class="steps-content" *ngIf="index">
+          <p>{{ index.description }}</p>
+          <nz-radio-group [(ngModel)]="radioValue" nzButtonStyle="solid">
+            <label
+              (click)="onOptionClick(option, index.id)"
+              style="margin: 0 10px"
+              *ngFor="let option of index.options"
+              nz-radio-button
+              [nzValue]="option.label"
+              >{{ option.value }}</label
+            >
+          </nz-radio-group>
+        </div>
+
+        <div class="steps-action">
+          <button
+            nz-button
+            nzType="default"
+            (click)="pre()"
+            *ngIf="current > 0"
+          >
+            <span>Previous</span>
+          </button>
+          <button
+            nz-button
+            nzType="default"
+            (click)="next()"
+            *ngIf="current < 3"
+          >
+            <span>Next</span>
+          </button>
+        </div>
+      </div>
+    </nz-modal>
+  </div>
+</div>
+
+<div nz-row>
+  <div nz-col nzSpan="16" nzOffset="4">
+    <nz-table #basicTable [nzData]="listOfData" nzShowPagination="false">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>Duration</th>
+          <th>Date</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.id }}</td>
+          <td>{{ millisToMinutesAndSeconds(data.duration) }}</td>
+          <td>{{ convertDate(data.startTime) }}</td>
+          <td>{{ data.result }} %</td>
+        </tr>
+      </tbody>
+      <nz-pagination
+        style="margin-top: 30px"
+        [nzPageIndex]="currentPage"
+        [nzTotal]="totalTests"
+        nzShowSizeChanger
+        [nzPageSizeOptions]="[3, 5, 10]"
+        (nzPageIndexChange)="pageIndexChangeHandler($event)"
+        (nzPageSizeChange)="pageSizeChangeHandler($event)"
+        [nzPageSize]="currentSize"
+      ></nz-pagination>
+    </nz-table>
+  </div>
+</div>
