@@ -1,4 +1,24 @@
-<!-- NG-ZORRO -->
-<a href="https://github.com/NG-ZORRO/ng-zorro-antd" target="_blank" style="display: flex;align-items: center;justify-content: center;height: 100%;width: 100%;">
-  <img height="300" src="https://img.alicdn.com/tfs/TB1X.qJJgHqK1RjSZFgXXa7JXXa-89-131.svg">
-</a>
+<div nz-row style="margin: 50px 0">
+  <div nz-col nzSpan="16" nzOffset="4">
+    <div nz-row [nzGutter]="8">
+      <div nz-col [nzSpan]="8">
+        <nz-card nzTitle="Number of Tests">
+          <p>{{ overallStats.numberOfTests }}</p>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-card nzTitle="Average Result">
+          <nz-progress
+            [nzPercent]="getNumberInput(overallStats.average)"
+            nzType="circle"
+          ></nz-progress>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-card nzTitle="Average Duration">
+          <p>{{ millisToMinutesAndSeconds(overallStats.duration) }}</p>
+        </nz-card>
+      </div>
+    </div>
+  </div>
+</div>
